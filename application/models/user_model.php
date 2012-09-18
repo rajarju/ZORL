@@ -67,30 +67,20 @@ class User_model extends CI_Model{
 	}
 
 	//Load and set the login for the user with given uid
-	function login($user){
+	function login($user){		
 		//Create new session
 		$session = md5(uniqid(microtime()) . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']); 
 		$user->session = $session;
 		//Update DB
-		//Set Cookie
-		$this->load->helper('cookie');
-		$cookie = array(
-		  'name'   => 'user',
-		  'value'  => $session
-		  //'expire' => 86500, // have a high cookie time till you make sure you actually set the cookie
-		  //'domain' => '.example.org', // the first . to make sure subdomains isn't a problem
-		  //'path' => '/',
-		  //'secure' => TRUE
-		);
-		set_cookie('user', $cookie, -1, '/'); 
+		//Set Cookie	
+		setcookie('user', $session,  time() + (86400 * 7), '/'); 
 	}
 
 	//Logout the given user
 	function logout($uid = null){
 		//Clear session in db
 		//Remove cookie
-		$this->load->helper('cookie');
-		delete_cookie('user');
+		setcookie('user', '',  time() - (86400 * 7), '/'); 
 	}
 
 }

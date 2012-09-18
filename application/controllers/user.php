@@ -17,10 +17,8 @@ class User extends Main_Controller {
     //Show Dashboard
     $data = array();
 
-   	$this->load->view('include/header');
-   	$this->load->view('templates/menubar', array(
-   		'user' => $user
-   	));
+    $data['user'] = $user;
+   	$this->load->view('include/header');   	
 
     $this->load->view('dashboard', $data);
     $this->load->view('include/footer');
@@ -39,17 +37,12 @@ class User extends Main_Controller {
 		$this->load->helper('form');
 		$this->load->helper('cookie');		
 
-		//Pade Data
-		$data = array(
-			'error' => array(),
-			'info' => array()
-		);
+		$data = array();
 
 		//Check for POST
 		if($this->input->post()){
 			$form = $this->input->post(NULL, TRUE);
-			$this->load->model('User_model');
-			$errors = null;
+			$this->load->model('User_model');			
 			//TODO:Check for length of fields
 
 			//Check for login
@@ -80,11 +73,28 @@ class User extends Main_Controller {
 	}
 
 
-
+	//page to logout user and redirect to login page
 	public function logout(){
 		$this->load->model('User_model');
 		$this->User_model->logout();
 		redirect('user');
+	}
+
+
+
+	//Registration page
+	public function register(){
+
+		$data = array();
+
+		$this->load->view('include/header', array(
+				'scripts' => array(
+					'assets/js/register.js'
+				)
+		));
+		$this->load->view('templates/register', $data);
+		//Show Footer
+		$this->load->view('include/footer');	
 	}
    
 }

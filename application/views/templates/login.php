@@ -1,13 +1,6 @@
 <div style="width: 320px; margin: 0 auto;">
    <h3>Login</h3>
-   <?php print_r($error) ?>
-   <div id="messages">
-      <div class="alert alert-error">
-      </div>
-      <div class="alert alert-info">
-      </div>
-   </div>
-
+   <?php $this->load->view('partials/_messages'); ?>
    <form class="well" method="POST" id="login-form" name="login">
       <label>Username</label>
       <input type="text" name="username" style="width: 260px;" maxlength="10" minlength="4" required/>

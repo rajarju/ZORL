@@ -11,7 +11,8 @@
 
       <ul class="nav nav-pills pull-right">
          <?php if($user->uid): ?>
-            <li><a href="<?= base_url('user/login') ?>">Logout</a></li>
+            <li><a><?= $user->name ?></a></li>
+            <li><a href="<?= base_url('user/logout') ?>">Logout</a></li>
          <?php endif; ?>
       </ul>
    </ul>
