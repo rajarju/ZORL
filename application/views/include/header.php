@@ -7,7 +7,7 @@
    <meta name="keywords" content="">
    <meta name="author" content="">
 
-   <title>CodeIgniter Bootstrap</title>
+   <title>ZORL</title>
 
    <link href="<?= base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
    <link href="<?= base_url('assets/css/bootstrap-responsive.min.css') ?>" rel="stylesheet">
@@ -36,3 +36,8 @@
 
 </head>
 <body>
+   <header>
+      <div id="logo">
+         <h1>ZORL</h1>
+      </div>
+   </header>

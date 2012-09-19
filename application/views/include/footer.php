@@ -1,5 +1,5 @@
-<div class="row-fluid">
-  <div class="span12">All rights reserved</div>
-</div>
+<footer class="container-fluid">
+	Footer
+</footer>
 </body>
 </html>

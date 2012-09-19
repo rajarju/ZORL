@@ -5,3 +5,17 @@
 body {
    padding-top: 15px;
 }
+
+
+header{
+	
+}
+header h1{
+	text-align: center;
+}
+
+footer{
+	width: 80%;
+	margin: 0 auto;
+	text-align: center;
+}
