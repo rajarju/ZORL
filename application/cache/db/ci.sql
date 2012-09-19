@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 18, 2012 at 12:57 PM
+-- Generation Time: Sep 19, 2012 at 07:23 PM
 -- Server version: 5.5.25a
 -- PHP Version: 5.4.4
 
@@ -33,9 +33,24 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(20) NOT NULL,
   `cookie` varchar(100) NOT NULL,
   `status` int(11) NOT NULL,
+  `created_at` varchar(10) NOT NULL,
+  `accessed_at` varchar(10) NOT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name` (`name`,`pass`,`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`uid`, `name`, `pass`, `email`, `cookie`, `status`, `created_at`, `accessed_at`) VALUES
+(1, 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'admin@example.com', 'fbc464812a4bae910f257576cd1d8a1f', 1, '1348063724', '1348075267'),
+(3, 'test1', 'b444ac06613fc8d63795be9ad0beaf55011936ac', 'test1@example.com', '', 1, '1348064399', ''),
+(4, 'test2', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'test2@example.com', 'c716c5e026dc4693fa965eb1e59fb5ce', 1, '1348064579', '1348065009'),
+(5, 'test3', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'test3@example.com', '', 1, '1348064628', ''),
+(6, 'test4', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'test4@example.com', '', 1, '1348064848', ''),
+(7, 'test5', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'test5@example.com', '', 1, '1348064897', ''),
+(8, 'test6', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'test6@example.com', 'ad317cf0565317c9aeee1350be64a737', 1, '1348064949', '1348064966');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
