@@ -1,34 +1,35 @@
-<?php if (!defined('BASEPATH')) die();
+<?php
 
-class Mail_model extends CI_Model{
+if (!defined('BASEPATH'))
+  die();
 
-	function __construct(){
-		parent::__construct();
-	}
+class Mail_model extends CI_Model {
 
-	public $fromMail = 'mail@zorl.com';
-	public $fromName = 'ZORL';
+  function __construct() {
+    parent::__construct();
+  }
 
-	//Sends out registration mails
-	function registrationMail($to, $subject, $data){
+  public $fromMail = 'mail@zorl.com';
+  public $fromName = 'ZORL';
 
-		$this->load->library('email');
+  //Sends out registration mails
+  function registrationMail($user, $data) {
 
-		$this->email->from($this->fromMail, 'sender');
-		$this->email->to($to); 
-		//$this->email->cc('another@another-example.com'); 
-		//$this->email->bcc('them@their-example.com'); 
+    //Set headers
+    $headers = "From: " . strip_tags($this->fromMail) . "\r\n";
+    //$headers .= "Reply-To: " . strip_tags($_POST['req-email']) . "\r\n";
+    $headers .= "CC: susan@example.com\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+    
+    $data['user'] = $user;
 
-		$this->email->subject($subject);
-		
+    //Prepare template data
 
-		//$email = $this->load->view('emails/template', $data, TRUE); 
-		$this->email->message('Testing the email class.');	
-		
-		//echo $this->email->print_debugger();
-		//die;
-		return	$this->email->send();
+    $message = $this->load->view('emails/newRegistration', $data, TRUE);
+	
+    return mail($user->mail, "Welcome to ZORL", $message, $headers);
 
-	}
+  }
 
 }

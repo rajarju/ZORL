@@ -4,7 +4,7 @@
  * What protocol to use?
  * mail, sendmail, smtp
  */
-$config['protocol'] = 'C:\xampp\mailtodisk\mailtodisk.exe';
+$config['protocol'] = 'smtp';
 
 /*
  * SMTP server address and port
@@ -15,8 +15,8 @@ $config['smtp_port'] = '25';
 /*
  * SMTP username and password.
  */
-$config['smtp_user'] = 'test@localhost.localmail';
-$config['smtp_pass'] = 'password';
+//$config['smtp_user'] = 'test@localhost.localmail';
+//$config['smtp_pass'] = 'password';
 
 /*
  * Heroku Sendgrid information.
