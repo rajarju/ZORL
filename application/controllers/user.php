@@ -3,7 +3,7 @@
 class User extends Main_Controller {
 
 
-	public function index(){
+	public function index(){		
 
    	//Redirect if not logged in
 		$this->load->model('User_model');
@@ -172,7 +172,20 @@ class User extends Main_Controller {
 		$this->load->view('include/footer');	
 	}
 
+
+
+	//Test mail page
+	function testMail(){
+
+
+		$this->load->model('Mail_model');
+
+		$status = $this->Mail_model->registrationMail('test@rajarjun.com', 'TEST MAIL', NULL);
+
+		print 'SENT ' .  $status;
+
+	}
+
+
 }
 
-/* End of file frontpage.php */
-/* Location: ./application/controllers/frontpage.php */

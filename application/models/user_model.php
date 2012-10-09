@@ -49,7 +49,7 @@ class User_model extends CI_Model{
 
 		$sha = sha1($pass);
 
-		$query = $this->db->query("SELECT uid FROM user WHERE name = '$username' AND pass = '$sha'");
+		$query = $this->db->query("SELECT uid FROM user WHERE name = '$username' AND pass = '$sha' AND status = 1");
 
 		if($query->num_rows() > 0){
 
@@ -177,6 +177,27 @@ class User_model extends CI_Model{
 		$user->uid = $row->uid;
 		return $user;
 	}
+
+
+	//Create URL token for registration check
+	function addUrlToken($user){
+		//Check if the userid already has a token built
+		$query_remove = $this->db->query('');
+		//If it does then remove it and create a new token
+
+		//Create a new token
+
+	}
+
+
+	//Check URL token 
+	//Return $user if token exists
+	//Else return FALSE
+	function checkUrlToken($token){
+
+	}
+
+
 
 }
 
