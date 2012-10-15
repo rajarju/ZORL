@@ -144,10 +144,7 @@ class User extends Main_Controller {
         ));
 
         //No Immediate Login
-        //Login User
-        //$this->User_model->login($user);
-        //Redirect
-        redirect('user');
+        set_message('Please check your email to proceed with the registration');        
       } else {
         foreach ($error as $i)
           set_message($i, 'error');
