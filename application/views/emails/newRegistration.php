@@ -5,5 +5,5 @@
 	<p>Hi <?php $user->name ?></p>
   <p>Welcome to Zorl</p>
   <p>Click here to verify your account</p>
-  <p><?= base_url('user/onetime/' . $token) ?></p>
+  <p><a href='<?= base_url('user/onetime/' . $token) ?>'>Login</a></p>
 </div> 

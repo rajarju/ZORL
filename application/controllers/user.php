@@ -173,25 +173,26 @@ class User extends Main_Controller {
   public function password() {
     //Redirect if  logged in
     $this->load->model('User_model');
-    if (!($user = $this->User_model->checkSession())) {
-      redirect('user/index');
+    $user = $this->User_model->checkSession();
+    if (!$user->uid) {
+      //die('shoot');
+      redirect('user');
     }
 
     //Check for post
     if ($this->input->post()) {
 
-      $form = $this->input->post(NULL, TRUE);      
-      
+      $form = $this->input->post(NULL, TRUE);
+
       //Check if the new passwords match
       //Check if passwords are same
       if (!$this->User_model->checkPass($form['password'], $form['password2'])) {
         set_message("The passwords that you have entered dont match", 'error');
       }
       //Check if the old password is correct  
-      elseif(!$this->User_model->checkLogin($user->name, $form['oldpassword'])){
+      elseif (!$this->User_model->checkLogin($user->name, $form['oldpassword'])) {
         set_message('The current password that you have entered is wrong', 'error');
-      }
-      else{
+      } else {
         //Change password to new one
         $this->User_model->setPassword($user->uid, $form['password']);
         set_message('Your password has been changed');
@@ -220,18 +221,21 @@ class User extends Main_Controller {
     //Check if the token is valid 
     //die('checking');
     if ($user = $this->User_model->checkUrlToken(check_plain($token))) {
-
+      //die('bitch');
       //Activate the user account, UNBLOCK
       $this->User_model->block($user->uid, TRUE);
       //If valid user then login the user and send to dash
       $this->User_model->login($user);
-      redirect('user');
+
+      set_message('Change your password');
+      $this->password();
+      //redirect('user/password');
     } else {
       //Show error message      
       set_message('The url token has expired', 'error');
       set_message('Try generating a new one at <a href="' . base_url('user/forgot') . '"> Forgot Password</a>', 'error');
+      $this->login();
     }
-    $this->login();
   }
 
   /**

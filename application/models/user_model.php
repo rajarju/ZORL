@@ -15,9 +15,8 @@ class User_model extends CI_Model {
    */
   function checkSession() {
     $this->load->helper('cookie');
-    $session = get_cookie('user');
-
-    if (isset($session)) {
+    if (isset($_COOKIE['user'])) {
+    $session = $_COOKIE['user'];   
       if (!$this->validateCookie($session)) {
         return FALSE;
       } else {
@@ -116,10 +115,12 @@ class User_model extends CI_Model {
     $time = time();
     //Update DB
     $sql = "UPDATE user SET cookie = '$session',  accessed_at = '$time' WHERE uid = $user->uid";
-
     $this->db->query($sql);
     //Set Cookie	
     setcookie('user', $session, time() + (86400 * 7), '/');
+
+    $GLOBALS['user']  = $user;
+    $_COOKIE['user'] = $session;
   }
 
   /**
