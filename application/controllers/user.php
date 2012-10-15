@@ -168,6 +168,49 @@ class User extends Main_Controller {
   }
 
   /**
+   * page to reset password
+   */
+  public function password() {
+    //Redirect if  logged in
+    $this->load->model('User_model');
+    if (!($user = $this->User_model->checkSession())) {
+      redirect('user/index');
+    }
+
+    //Check for post
+    if ($this->input->post()) {
+
+      $form = $this->input->post(NULL, TRUE);      
+      
+      //Check if the new passwords match
+      //Check if passwords are same
+      if (!$this->User_model->checkPass($form['password'], $form['password2'])) {
+        set_message("The passwords that you have entered dont match", 'error');
+      }
+      //Check if the old password is correct  
+      elseif(!$this->User_model->checkLogin($user->name, $form['oldpassword'])){
+        set_message('The current password that you have entered is wrong', 'error');
+      }
+      else{
+        //Change password to new one
+        $this->User_model->setPassword($user->uid, $form['password']);
+        set_message('Your password has been changed');
+      }
+    }
+
+    $this->load->view('include/header', array(
+        'scripts' => array(
+            'assets/js/register.js'
+        )
+    ));
+    $data['messages'] = get_messages();
+    $data['user'] = $user;
+    $this->load->view('templates/password', $data);
+    //Show Footer
+    $this->load->view('include/footer');
+  }
+
+  /**
    * One time login with url
    */
   public function onetime($token = null) {
@@ -175,9 +218,11 @@ class User extends Main_Controller {
     $this->load->model('User_model');
     $this->load->helper('url_helper');
     //Check if the token is valid 
-
     //die('checking');
     if ($user = $this->User_model->checkUrlToken(check_plain($token))) {
+
+      //Activate the user account, UNBLOCK
+      $this->User_model->block($user->uid, TRUE);
       //If valid user then login the user and send to dash
       $this->User_model->login($user);
       redirect('user');
@@ -193,6 +238,12 @@ class User extends Main_Controller {
    * The forgot password page
    */
   public function forgot() {
+    //Redirect if  logged in
+    $this->load->model('User_model');
+    if ($this->User_model->checkSession()) {
+      redirect('user/index');
+    }
+
     //Check for post
     if ($this->input->post()) {
 

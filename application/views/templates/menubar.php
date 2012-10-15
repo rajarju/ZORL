@@ -14,7 +14,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown"><?= $user->name ?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="<?= base_url('user/settings/') ?>">Change Password</a></li>
+            <li><a href="<?= base_url('user/password/') ?>">Change Password</a></li>
           </ul>
         </li>
         <li><a href="<?= base_url('user/logout') ?>">Logout</a></li>

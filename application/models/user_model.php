@@ -43,19 +43,17 @@ class User_model extends CI_Model {
    * @param type $mail
    * @return type
    */
-  function loadFromMail($mail){
+  function loadFromMail($mail) {
     $query = $this->db->query("SELECT uid, name, email FROM user WHERE email = '$mail' LIMIT 1");
     return $query->row();
   }
-  
+
   /**
    * Load User from Session value
    */
   function loadFromSession($session) {
-    return (object) array(
-                'name' => 'admin',
-                'uid' => 1
-    );
+     $query = $this->db->query("SELECT uid, name, email FROM user WHERE cookie = '$session' LIMIT 1");
+    return $query->row();
   }
 
   /**
@@ -134,6 +132,17 @@ class User_model extends CI_Model {
   }
 
   /**
+   * Block user
+   * @param type $uid
+   * @param type $status FALSE for Block and TRUE for Unblock
+   */
+  function block($uid, $status = FALSE) {
+    $status = $status ? 1 : 0;
+    $sql = "UPDATE user SET status = $status WHERE uid = $uid";
+    return $this->db->query($sql);
+  }
+
+  /**
    * REGISTRATION
    * Check valid username
    */
@@ -185,27 +194,28 @@ class User_model extends CI_Model {
 
   /**
    * Add new user
-   *Takes user object as parameter
+   * Takes user object as parameter
    * 
    * @param type $user
    * @return type
    */
-  function addUser($user) {
+  function addUser($user, $status = FALSE) {
     //Add user to database
     //redirect to dashboard
     $time = time();
     $sha = sha1($user->password);
 
+    $status = $status ? 1 : 0;
 
     $data = array(
         'name' => $user->name,
-        'email' => $user->mail,
+        'email' => $user->email,
         'created_at' => $time, //Time stamp of creation
         //'accessed_at' => $time, //Time stamp of creation //Will be added by login function
 
         'pass' => $sha,
         //Cookie will be added by login function
-        'status' => 1 //TRUE for accounts not blocked
+        'status' => $status //TRUE for accounts not blocked
     );
 
     $this->db->insert('user', $data);
@@ -218,6 +228,18 @@ class User_model extends CI_Model {
     return $user;
   }
 
+  
+  /**
+   * Set new password for user
+   * @param type $uid
+   * @param type $pass
+   */
+  function setPassword($uid, $pass){
+    $sha = sha1($pass);
+    $sql = "UPDATE user SET pass = '$sha' WHERE uid = $uid";
+    $this->db->query($sql);
+  }
+  
   /**
    * Generate URL Token
    */
