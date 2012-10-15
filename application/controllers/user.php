@@ -5,6 +5,9 @@ if (!defined('BASEPATH'))
 
 class User extends Main_Controller {
 
+  /**
+   * User Dashboard
+   */
   public function index() {
 
     //Redirect if not logged in
@@ -22,13 +25,15 @@ class User extends Main_Controller {
     $data['user'] = $user;
 
     $this->load->view('include/header');
-
+    $data['messages'] = get_messages();
     $this->load->view('dashboard', $data);
 
     $this->load->view('include/footer');
   }
 
-  //Login page with form and basic validation
+  /**
+   * Login page with form and basic validation
+   */
   public function login() {
 
     //Redirect if  logged in
@@ -79,7 +84,9 @@ class User extends Main_Controller {
     redirect('user');
   }
 
-  //Registration page
+  /**
+   * Registration page
+   */
   public function register() {
 
 
@@ -106,13 +113,13 @@ class User extends Main_Controller {
 
       //Check if email is unique
       $this->load->helper('email');
-      if (!valid_email($form['mail'])) {
+      if (!valid_email($form['email'])) {
         $error[] = "The email that you have entered is Invalid";
       }
 
       //Check if email is not already in use
-      if (!$this->User_model->checkMailUnique($form['mail'])) {
-        $error[] = "This email " . $form['mail'] . " already has an account here";
+      if (!$this->User_model->checkMailUnique($form['email'])) {
+        $error[] = "This email " . $form['email'] . " already has an account here";
       }
       //Check if passwords are same
       if (!$this->User_model->checkPass($form['password'], $form['password2'])) {
@@ -124,7 +131,7 @@ class User extends Main_Controller {
         $user = array(
             'name' => check_plain($form['username']),
             'password' => ($form['password']),
-            'mail' => check_plain($form['mail'])
+            'email' => check_plain($form['email'])
         );
 
         $user = $this->User_model->addUser((object) $user);
@@ -142,8 +149,8 @@ class User extends Main_Controller {
         //Redirect
         redirect('user');
       } else {
-        foreach($error as $i)
-          set_message ($i, 'error');
+        foreach ($error as $i)
+          set_message($i, 'error');
       }
     }
 
@@ -154,38 +161,75 @@ class User extends Main_Controller {
             'assets/js/register.js'
         )
     ));
+    $data['messages'] = get_messages();
     $this->load->view('templates/register', $data);
     //Show Footer
     $this->load->view('include/footer');
   }
 
-  //One time login with url
+  /**
+   * One time login with url
+   */
   public function onetime($token = null) {
 
     $this->load->model('User_model');
     $this->load->helper('url_helper');
     //Check if the token is valid 
+
+    //die('checking');
     if ($user = $this->User_model->checkUrlToken(check_plain($token))) {
       //If valid user then login the user and send to dash
       $this->User_model->login($user);
       redirect('user');
     } else {
-      //Show error message
-
+      //Show error message      
       set_message('The url token has expired', 'error');
-      set_message('Try generating a new one at <a href="' . base_url('user/forgot') . '"> Forgot Password</a>', 'error');      
+      set_message('Try generating a new one at <a href="' . base_url('user/forgot') . '"> Forgot Password</a>', 'error');
+    }
+    $this->login();
+  }
+
+  /**
+   * The forgot password page
+   */
+  public function forgot() {
+    //Check for post
+    if ($this->input->post()) {
+
+      $form = $this->input->post(NULL, TRUE);
+
+      //Check if email is unique
+      $this->load->helper('email');
+      //Check email
+      if (!valid_email($form['email'])) {
+        set_message("The email that you have entered is not Invalid", 'error');
+      } else {
+        $email = check_plain($form['email']);
+        //Based on email generate new login url token
+        $this->load->model('User_model');
+        $this->load->model('Mail_model');
+        $user = $this->User_model->loadFromMail($email);
+        if ($user && $user->uid) {
+          //Generate new token and add to system
+          $token = $this->User_model->addUrlToken($user);
+          //Send email
+          $this->Mail_model->forgotMail($user, array(
+              'token' => $token
+          ));
+          set_message("Check your mail to Reset your password");
+        } else {
+          set_message("We dont have records for the email that you have given", 'error');
+        }
+      }
     }
 
-    
-    /*** PAGE TEMPLATING ***/
     $this->load->view('include/header', array(
         'scripts' => array(
             'assets/js/register.js'
         )
     ));
-    $data['messages'] += get_messages();
-    
-    $this->load->view('templates/login', $data);
+    $data['messages'] = get_messages();
+    $this->load->view('templates/forgot', $data);
     //Show Footer
     $this->load->view('include/footer');
   }

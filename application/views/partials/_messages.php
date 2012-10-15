@@ -8,9 +8,9 @@
       <?php endforeach; ?>
     <?php endif; ?>
   <?php endif; ?>
-  <?php if (isset($info)): ?>
-    <?php if (count($info)): ?>
-      <?php foreach ($info as $i): ?>
+  <?php if (isset($status)): ?>
+    <?php if (count($status)): ?>
+      <?php foreach ($status as $i): ?>
         <div class="alert alert-info"><?= $i ?></div>
       <?php endforeach; ?>
     <?php endif; ?>

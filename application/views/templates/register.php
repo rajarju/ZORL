@@ -5,7 +5,7 @@
       <label>Username</label>
       <input type="text" name="username" style="width: 260px;" maxlength="10" minlength="4" required/>
       <label>Email</label>
-      <input type="email" name="mail" style="width: 260px;" maxlength="30" minlength="4" required/>
+      <input type="email" name="email" style="width: 260px;" maxlength="30" minlength="4" required/>
       <label>Password</label>
       <input type="password" name="password" style="width: 260px;" minlength="6" required/>
        <label>Password Again</label>

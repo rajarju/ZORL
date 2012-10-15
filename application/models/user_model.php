@@ -9,6 +9,10 @@ class User_model extends CI_Model {
     parent::__construct();
   }
 
+  /**
+   * Check current user session
+   * @return boolean
+   */
   function checkSession() {
     $this->load->helper('cookie');
     $session = get_cookie('user');
@@ -24,15 +28,29 @@ class User_model extends CI_Model {
     }
   }
 
-  //Load user object based on uid
-  //Returns user object
+  /**
+   * Load user object based on uid
+   * Returns user object
+   */
   function load($uid) {
     $query = $this->db->query("SELECT uid, name, email FROM user WHERE uid = $uid LIMIT 1");
 
     return $query->row();
   }
 
-  //Load User from Session value
+  /**
+   *  Load user object from email
+   * @param type $mail
+   * @return type
+   */
+  function loadFromMail($mail){
+    $query = $this->db->query("SELECT uid, name, email FROM user WHERE email = '$mail' LIMIT 1");
+    return $query->row();
+  }
+  
+  /**
+   * Load User from Session value
+   */
   function loadFromSession($session) {
     return (object) array(
                 'name' => 'admin',
@@ -40,14 +58,21 @@ class User_model extends CI_Model {
     );
   }
 
-  //Remove User from DB based on uid
+  /**
+   * Remove User from DB based on uid
+   */
   function delete($uid) {
     
   }
 
-  //Checks if the credentials are correct
-  //$pass will be hashed before checking it
-  //Returns $user object or false
+  /**
+   * Checks if the credentials are correct
+   * $pass will be hashed before checking it
+   * 
+   * @param type $username
+   * @param type $pass
+   * @return booleanReturns $user object or false
+   */
   function checkLogin($username, $pass) {
 
     $sha = sha1($pass);
@@ -67,8 +92,10 @@ class User_model extends CI_Model {
     }
   }
 
-  //Check the current cookie hash is valid,
-  //Else logout the user
+  /**
+   * Check the current cookie hash is valid,
+   * Else logout the user
+   */
   function validateCookie($session) {
     if ($session)
       return TRUE;
@@ -81,7 +108,9 @@ class User_model extends CI_Model {
     return md5(uniqid(microtime()) . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']);
   }
 
-  //Load and set the login for the user with given uid
+  /**
+   * Load and set the login for the user with given uid
+   */
   function login($user) {
     //Create new session
     $session = $this->newSession();
@@ -95,15 +124,19 @@ class User_model extends CI_Model {
     setcookie('user', $session, time() + (86400 * 7), '/');
   }
 
-  //Logout the given user
+  /**
+   * Logout the given user
+   */
   function logout($uid = null) {
     //Clear session in db
     //Remove cookie
     setcookie('user', '', time() - (86400 * 7), '/');
   }
 
-  //REGISTRATION
-  //Check valid username
+  /**
+   * REGISTRATION
+   * Check valid username
+   */
   function checkValidName($name) {
     // regular expression for validating username  
     $valid_username = "/^[a-z0-9_-]{3,16}$/";
@@ -116,7 +149,9 @@ class User_model extends CI_Model {
     }
   }
 
-  //Check if the username is unique
+  /**
+   * Check if the username is unique
+   */
   function checkNameUnique($name) {
 
     $query = $this->db->query("SELECT COUNT(*) FROM user WHERE name = '$name'");
@@ -127,7 +162,9 @@ class User_model extends CI_Model {
       return FALSE;
   }
 
-  //Check if the mail is unique
+  /**
+   * Check if the mail is unique
+   */
   function checkMailUnique($mail) {
 
     $query = $this->db->query("SELECT COUNT(*) FROM user WHERE email = '$mail'");
@@ -146,8 +183,13 @@ class User_model extends CI_Model {
       return FALSE;
   }
 
-  //Add new user
-  //Takes user object as parameter
+  /**
+   * Add new user
+   *Takes user object as parameter
+   * 
+   * @param type $user
+   * @return type
+   */
   function addUser($user) {
     //Add user to database
     //redirect to dashboard
@@ -176,7 +218,9 @@ class User_model extends CI_Model {
     return $user;
   }
 
-  //Generate URL Token
+  /**
+   * Generate URL Token
+   */
   function generateUrlToken() {
     $date = new DateTime();
     $stamp = $date->getTimestamp();
@@ -184,7 +228,9 @@ class User_model extends CI_Model {
     return sha1($stamp);
   }
 
-  //Create URL token for registration check
+  /**
+   * Create URL token for registration check
+   */
   function addUrlToken($user) {
 
     //Check if the userid already has a token built
@@ -200,9 +246,13 @@ class User_model extends CI_Model {
     return $token;
   }
 
-  //Check URL token 
-  //Return $user if token exists
-  //Else return FALSE
+  /**
+   * Check URL token 
+   * Return $user if token exists
+   * Else return FALSE
+   * @param type $token
+   * @return boolean
+   */
   function checkUrlToken($token) {
 
     $query_check = $this->db->query("SELECT * from register_token WHERE token = '$token' LIMIT 1");
